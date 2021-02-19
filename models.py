@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, create_engine, Integer, Float
+from sqlalchemy import Column, String, create_engine, Integer, Float, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -43,3 +43,19 @@ _base.metadata.create_all()
 _session = sessionmaker(bind=_engine)
 
 session = _session()
+
+
+def sum_assets():
+    return session.query(func.sum(Assets.balance)).scalar()
+
+
+def sum_debt():
+    return session.query(func.sum(Debt.balance)).scalar()
+
+
+def sum_income():
+    return session.query(func.sum(Income.number)).scalar()
+
+
+def sum_expenses():
+    return session.query(func.sum(Expenses.number)).scalar()
