@@ -4,9 +4,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from reference import BASE_DIR, AssetsCategory
 
+_base = declarative_base()
 _database_name = 'test.db'
 _engine = create_engine(f"sqlite:///{BASE_DIR.joinpath(_database_name)}", echo=False)
-_base = declarative_base()
 
 
 class Assets(_base):
@@ -38,6 +38,8 @@ class Expenses(_base):
     number = Column(Float, default='')
 
 
+_base.metadata.bind = _engine
+_base.metadata.create_all()
 _session = sessionmaker(bind=_engine)
 
 session = _session()
