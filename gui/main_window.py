@@ -1,13 +1,10 @@
 from gui import QMainWindow, QHBoxLayout, QTabWidget, Qt, QWidget
 from reference import WINDOW_WIDTH, WINDOW_HEIGHT
 
-from gui.tab_assets_widget import TabAssets
-from gui.tab_debt_widget import TabDebt
-from gui.tab_income_widget import TabIncome
-from gui.tab_expenses_widget import TabExpenses
+from gui.tabs import *
 
 
-class Example(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
