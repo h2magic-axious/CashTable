@@ -7,7 +7,11 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QTableWidgetItem,
-    QHeaderView
+    QHeaderView,
+    QGridLayout,
+    QLabel,
+    QComboBox,
+    QPushButton
 )
 
 from PyQt5.QtCore import Qt

@@ -10,12 +10,14 @@ FONT_SIZE = 15
 
 
 class AssetsCategory:
-    STATIC = 0
-    CURRENCY = 1
-    BANK = 2
+    ALL = 0
+    STATIC = 1
+    CURRENCY = 2
+    BANK = 3
 
 
 AssetsMap = {
+    AssetsCategory.ALL: '全部',
     AssetsCategory.STATIC: '不动产',
     AssetsCategory.CURRENCY: '纸资产',
     AssetsCategory.BANK: '存款'
