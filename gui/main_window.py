@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
-        self.tab_widget.addTab(QWidget(), 'Dashboard')
+        self.tab_widget.addTab(TabDashboard(), 'Dashboard')
         self.tab_widget.addTab(TabAssets(), 'Assets')
         self.tab_widget.addTab(TabDebt(), 'Debt')
         self.tab_widget.addTab(TabIncome(), 'Income')
