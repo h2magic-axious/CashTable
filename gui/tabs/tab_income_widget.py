@@ -1,5 +1,5 @@
 from gui import QWidget, QHBoxLayout
-from gui.functions import new_table, item
+from gui.functions import new_table, new_item
 
 
 class TabIncome(QWidget):
@@ -9,9 +9,9 @@ class TabIncome(QWidget):
         root_layout = QHBoxLayout()
 
         self.table = new_table(20, 3, self, ['ID', '项目', '金额'])
-        self.table.setItem(0, 0, item("汇总", True))
-        self.table.setItem(0, 1, item('', True))
-        self.table.setItem(0, 2, item('0.0', True))
+        self.table.setItem(0, 0, new_item("汇总", True))
+        self.table.setItem(0, 1, new_item('', True))
+        self.table.setItem(0, 2, new_item('0.0', True))
 
         root_layout.addWidget(self.table)
 

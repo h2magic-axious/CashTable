@@ -1,5 +1,5 @@
-from gui import QTableWidget, QHeaderView, QTableWidgetItem, Qt, QFont
-from reference import FONT_SIZE
+from gui import QTableWidget, QHeaderView, QTableWidgetItem, Qt, QFont, QComboBox
+from reference import FONT_SIZE, AssetsMap
 
 
 def new_table(row, col, parent, headers: list):
@@ -13,7 +13,7 @@ def new_table(row, col, parent, headers: list):
     return table
 
 
-def item(content, disable=False):
+def new_item(content, disable=False):
     i = QTableWidgetItem(content)
 
     i.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
@@ -23,3 +23,31 @@ def item(content, disable=False):
         i.setFlags(Qt.ItemIsEditable)
 
     return i
+
+
+def new_combo_box(parent):
+    temp_combox_box = QComboBox(parent)
+    for key, value in AssetsMap.items():
+        temp_combox_box.addItem(str(key))
+        temp_combox_box.setItemText(key, value)
+
+    temp_combox_box.setStyleSheet(
+        'QComboBox{font-family:"宋体";font-size:$1px;color:green}'.replace('$1', str(FONT_SIZE)))
+
+    return temp_combox_box
+
+
+def get_item_content(table: QTableWidget, row, col):
+    item = table.item(row, col)
+    if item:
+        return item.text()
+    else:
+        return None
+
+
+def get_combo_content(table: QTableWidget, row, col):
+    widget = table.cellWidget(row, col)
+    if widget:
+        return widget.currentIndex()
+    else:
+        return 0
