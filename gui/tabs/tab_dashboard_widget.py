@@ -1,6 +1,27 @@
-from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QLabel, Qt, QFont
+from gui import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QLabel, Qt, QFont, QGridLayout
 from reference import FONT_SIZE
-from models import DATABASE_PATH, BASE_DIR
+from models import DATABASE_PATH, BASE_DIR, Assets, Debt, Income, Expenses, func, session
+
+DEFAULT_FONT = QFont('宋体', FONT_SIZE)
+
+
+def new_label(parent, content, align):
+    temp = QLabel(parent)
+    temp.setText(content)
+    temp.setAlignment(align)
+    temp.setFont(DEFAULT_FONT)
+    return temp
+
+
+def new_line_edit(parent, content, align, no=True):
+    temp = QLineEdit(parent)
+    temp.setFont(DEFAULT_FONT)
+    temp.setAlignment(align)
+    temp.setText(content)
+    if no:
+        temp.setFocusPolicy(Qt.NoFocus)
+
+    return temp
 
 
 class TabDashboard(QWidget):
@@ -17,35 +38,23 @@ class TabDashboard(QWidget):
     def init_python_label_layout(self):
         temp = QHBoxLayout()
 
-        temp_label = QLabel(self)
-        temp_label.setText('进程路径：')
-        temp_label.setAlignment(Qt.AlignRight)
-        temp_label.setFont(QFont('宋体', FONT_SIZE))
-        temp.addWidget(temp_label)
-
-        temp_line_edit = QLineEdit(self)
-        temp_line_edit.setFont(QFont('宋体', FONT_SIZE))
-        temp_line_edit.setAlignment(Qt.AlignLeft)
-        temp_line_edit.setFocusPolicy(Qt.NoFocus)
-        temp_line_edit.setText(str(BASE_DIR))
-        temp.addWidget(temp_line_edit)
+        temp.addWidget(new_label(self, '进程路径：', Qt.AlignRight))
+        temp.addWidget(new_line_edit(self, str(BASE_DIR), Qt.AlignLeft))
 
         return temp
 
     def init_database_label_layout(self):
         temp = QHBoxLayout()
 
-        temp_label = QLabel(self)
-        temp_label.setText('数据库路径：')
-        temp_label.setAlignment(Qt.AlignRight)
-        temp_label.setFont(QFont('宋体', FONT_SIZE))
-        temp.addWidget(temp_label)
-
-        temp_line_edit = QLineEdit(self)
-        temp_line_edit.setFont(QFont('宋体', FONT_SIZE))
-        temp_line_edit.setAlignment(Qt.AlignLeft)
-        temp_line_edit.setFocusPolicy(Qt.NoFocus)
-        temp_line_edit.setText(str(DATABASE_PATH))
-        temp.addWidget(temp_line_edit)
+        temp.addWidget(new_label(self, '数据库路径：', Qt.AlignRight))
+        temp.addWidget(new_line_edit(self, str(DATABASE_PATH), Qt.AlignLeft))
 
         return temp
+
+    def init_asset_layout(self):
+        temp = QGridLayout()
+
+        temp.addWidget(new_label(self, '资产', Qt.AlignCenter), 0, 1)
+        temp.addWidget(new_label(self, '负债', Qt.AlignCenter), 0, 2)
+
+        temp.addWidget(new_label(self, '本金', Qt.AlignRight), 1, 0)
