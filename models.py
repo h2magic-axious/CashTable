@@ -5,8 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from reference import BASE_DIR, AssetsCategory
 
 _base = declarative_base()
-_database_name = 'test.db'
-DATABASE_PATH = BASE_DIR.joinpath(_database_name)
+DATABASE_PATH = BASE_DIR.joinpath('CashTable.sqlite3')
 _engine = create_engine(f"sqlite:///{DATABASE_PATH}", echo=False)
 
 
