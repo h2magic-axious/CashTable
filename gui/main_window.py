@@ -7,8 +7,9 @@ from models import Debt, Expenses, Income
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, sess):
         super().__init__()
+        self.sess = sess
 
         self.root_layout = QHBoxLayout()
 
@@ -39,12 +40,8 @@ class MainWindow(QMainWindow):
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
         self.tab_widget.addTab(TabDashboard(), 'Dashboard')
-        self.tab_widget.addTab(TabAssets(), 'Assets')
+        self.tab_widget.addTab(TabAssets(self.sess), 'Assets')
 
-        self.tab_widget.addTab(TabBase(Debt), 'Debt')
-        self.tab_widget.addTab(TabBase(Income), 'Income')
-        self.tab_widget.addTab(TabBase(Expenses), 'Expenses')
-
-        # self.tab_widget.addTab(TabDebt(), 'Debt')
-        # self.tab_widget.addTab(TabIncome(), 'Income')
-        # self.tab_widget.addTab(TabExpenses(), 'Expenses')
+        self.tab_widget.addTab(TabBase(Debt, self.sess), 'Debt')
+        self.tab_widget.addTab(TabBase(Income, self.sess), 'Income')
+        self.tab_widget.addTab(TabBase(Expenses, self.sess), 'Expenses')

@@ -1,13 +1,14 @@
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
 from gui.functions import new_table, new_item, new_combo_box, get_combo_content, get_item_content
-from models import session, Assets, sum_assets, func, distinct
+from models import Assets, sum_assets, func, distinct
 from reference import ROW_SET, AssetsCategory
 
 
 class TabAssets(QWidget):
-    def __init__(self):
+    def __init__(self, sess):
         super(TabAssets, self).__init__()
-        n_row = session.query(func.count(distinct(Assets.id))).scalar() // ROW_SET + 1
+        self.sess = sess
+        n_row = self.sess.query(func.count(distinct(Assets.id))).scalar() // ROW_SET + 1
 
         self.headers = ['ID', '项目', '金额', '类别']
         self.table = new_table(n_row * ROW_SET, 4, self, self.headers)
@@ -34,7 +35,7 @@ class TabAssets(QWidget):
         panel_layout.addWidget(self.line_id_edit)
 
         self.init_table(sum_assets())
-        self.display(session.query(Assets).all())
+        self.display(self.sess.query(Assets).all())
 
         table_layout.addWidget(self.table)
         root_layout.addLayout(panel_layout)
@@ -74,10 +75,10 @@ class TabAssets(QWidget):
 
         if key == AssetsCategory.ALL:
             s = sum_assets()
-            query_set = session.query(Assets).all()
+            query_set = self.sess.query(Assets).all()
         else:
-            s = session.query(func.sum(Assets.balance).filter(Assets.category == key)).scalar()
-            query_set = session.query(Assets).filter(Assets.category == key).all()
+            s = self.sess.query(func.sum(Assets.balance).filter(Assets.category == key)).scalar()
+            query_set = self.sess.query(Assets).filter(Assets.category == key).all()
 
         self.init_table(s, key)
         self.display(query_set)
@@ -96,7 +97,7 @@ class TabAssets(QWidget):
             if not ident and not balance:
                 continue
 
-            record = session.query(Assets).get(ident) if ident else Assets()
+            record = self.sess.query(Assets).get(ident) if ident else Assets()
 
             record.project = get_item_content(self.table, row, 1)
             record.category = int(get_combo_content(self.table, row, 3))
@@ -107,13 +108,13 @@ class TabAssets(QWidget):
                 message = f"不规范的数值\n{balance}"
                 QMessageBox.warning(self, '错误输入', message, QMessageBox.Ok)
 
-                session.commit()
+                self.sess.commit()
                 self.update_assets_category(0)
                 return
 
-            session.add(record)
+            self.sess.add(record)
 
-        session.commit()
+        self.sess.commit()
         self.update_assets_category(0)
 
     def button_cancel_clicked(self):
@@ -124,8 +125,8 @@ class TabAssets(QWidget):
         self.line_id_edit.clear()
 
         if ident:
-            record = session.query(Assets).get(ident)
-            session.delete(record)
+            record = self.sess.query(Assets).get(ident)
+            self.sess.delete(record)
 
-        session.commit()
+        self.sess.commit()
         self.update_assets_category(0)

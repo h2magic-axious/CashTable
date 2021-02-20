@@ -1,16 +1,17 @@
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
 from gui.functions import new_table, new_item, get_item_content
-from models import session, func, distinct
+from models import func, distinct
 from reference import ROW_SET
 
 
 class TabBase(QWidget):
-    def __init__(self, model):
+    def __init__(self, model, sess):
         super(TabBase, self).__init__()
 
         self.model = model
+        self.sess = sess
 
-        n_row = session.query(func.count(distinct(model.id))).scalar() // ROW_SET + 1
+        n_row = self.sess.query(func.count(distinct(model.id))).scalar() // ROW_SET + 1
 
         self.headers = ['ID', '项目', '金额']
         self.table = new_table(n_row * ROW_SET, 3, self, self.headers)
@@ -36,8 +37,8 @@ class TabBase(QWidget):
         panel_layout.addWidget(button_delete_by_id)
         panel_layout.addWidget(self.line_id_edit)
 
-        self.init_table(session.query(func.sum(model.balance)).scalar())
-        self.display(session.query(model).all())
+        self.init_table(self.sess.query(func.sum(model.balance)).scalar())
+        self.display(self.sess.query(model).all())
 
         table_layout.addWidget(self.table)
         root_layout.addLayout(panel_layout)
@@ -63,8 +64,8 @@ class TabBase(QWidget):
         self.table.clear()
         self.table.setHorizontalHeaderLabels(self.headers)
 
-        self.init_table(session.query(func.sum(self.model.balance)).scalar())
-        self.display(session.query(self.model).all())
+        self.init_table(self.sess.query(func.sum(self.model.balance)).scalar())
+        self.display(self.sess.query(self.model).all())
 
     def button_update_commit_clicked(self):
         for row in range(1, self.table.rowCount()):
@@ -74,9 +75,7 @@ class TabBase(QWidget):
             if not ident and not balance:
                 continue
 
-            record = session.query(self.model).get(ident) if ident else self.model()
-            print(record)
-
+            record = self.sess.query(self.model).get(ident) if ident else self.model()
             record.project = get_item_content(self.table, row, 1)
             try:
                 record.balance = float(balance)
@@ -84,13 +83,13 @@ class TabBase(QWidget):
                 message = f"不规范的数值\n{balance}"
                 QMessageBox.warning(self, '错误输入', message, QMessageBox.Ok)
 
-                session.commit()
+                self.sess.commit()
                 self.update_display()
                 return
 
-            session.add(record)
+            self.sess.add(record)
 
-        session.commit()
+        self.sess.commit()
         self.update_display()
 
     def button_delete_clicked(self):
@@ -98,8 +97,8 @@ class TabBase(QWidget):
         self.line_id_edit.clear()
 
         if ident:
-            record = session.query(self.model).get(ident)
-            session.delete(record)
+            record = self.sess.query(self.model).get(ident)
+            self.sess.delete(record)
 
-        session.commit()
+        self.sess.commit()
         self.update_display()
