@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, create_engine, Integer, Float, func
+from sqlalchemy import Column, String, create_engine, Integer, Float, func, distinct
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 

@@ -1,8 +1,6 @@
-from sqlalchemy import func, distinct
-
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit
 from gui.functions import new_table, new_item, new_combo_box, get_combo_content, get_item_content
-from models import session, Assets, sum_assets
+from models import session, Assets, sum_assets, func, distinct
 from reference import ROW_SET, AssetsCategory
 
 
@@ -15,20 +13,19 @@ class TabAssets(QWidget):
         self.table = new_table(n_row * ROW_SET, 4, self, self.headers)
 
         root_layout = QVBoxLayout()
-
         table_layout = QHBoxLayout()
-
         panel_layout = QHBoxLayout()
 
-        button_update_commit = QPushButton('提交修改', self)
+        button_update_commit = QPushButton('提交', self)
         button_update_commit.clicked.connect(self.button_update_commit_clicked)
 
-        button_cancel = QPushButton('撤销修改', self)
+        button_cancel = QPushButton('撤销', self)
         button_cancel.clicked.connect(self.button_cancel_clicked)
 
-        button_delete_by_id = QPushButton('删除记录', self)
+        button_delete_by_id = QPushButton('删除', self)
         self.line_id_edit = QLineEdit(self)
         self.line_id_edit.setPlaceholderText('输入要删除的记录的ID')
+        self.line_id_edit.setStyleSheet("background-color:#00CED1")
         button_delete_by_id.clicked.connect(self.button_delete_clicked)
 
         panel_layout.addWidget(button_update_commit)
@@ -48,7 +45,7 @@ class TabAssets(QWidget):
     def init_table(self, s, currentKey=0):
         self.table.setItem(0, 0, new_item("汇总", True))
         self.table.setItem(0, 1, new_item('', True))
-        self.table.setItem(0, 2, new_item(str(round(s, 4)), True))
+        self.table.setItem(0, 2, new_item(str(round(s or 0, 4)), True))
 
         assets_category_filter_combo_box = new_combo_box(self)
         assets_category_filter_combo_box.setCurrentIndex(currentKey)

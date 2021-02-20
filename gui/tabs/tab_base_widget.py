@@ -1,14 +1,17 @@
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit
 from gui.functions import new_table, new_item
-from models import session, func, distinct, Expenses, sum_expenses
+from models import session, func, distinct  # , sum_debt, Debt
 from reference import ROW_SET
 
 
-class TabExpenses(QWidget):
-    def __init__(self):
-        super(TabExpenses, self).__init__()
+class TabBase(QWidget):
+    def __init__(self, model, sum_func):
+        super(TabBase, self).__init__()
 
-        n_row = session.query(func.count(distinct(Expenses.id))).scalar() // ROW_SET + 1
+        self.model = model
+        self.sum_func = sum_func
+
+        n_row = session.query(func.count(distinct(self.model.id))).scalar() // ROW_SET + 1
 
         self.headers = ['ID', '项目', '金额']
         self.table = new_table(n_row * ROW_SET, 3, self, self.headers)
@@ -17,13 +20,13 @@ class TabExpenses(QWidget):
         table_layout = QHBoxLayout()
         panel_layout = QHBoxLayout()
 
-        button_update_commit = QPushButton('提交修改', self)
+        button_update_commit = QPushButton('提交', self)
         # button_update_commit.clicked.connect(self.button_update_commit_clicked)
 
-        button_cancel = QPushButton('撤销修改', self)
+        button_cancel = QPushButton('撤销', self)
         # button_cancel.clicked.connect(self.button_cancel_clicked)
 
-        button_delete_by_id = QPushButton('删除记录', self)
+        button_delete_by_id = QPushButton('删除', self)
         self.line_id_edit = QLineEdit(self)
         self.line_id_edit.setStyleSheet("background-color:#00CED1")
         self.line_id_edit.setPlaceholderText('输入要删除的记录的ID')
@@ -34,8 +37,8 @@ class TabExpenses(QWidget):
         panel_layout.addWidget(button_delete_by_id)
         panel_layout.addWidget(self.line_id_edit)
 
-        self.init_table(sum_expenses())
-        self.display(session.query(Expenses).all())
+        self.init_table(self.sum_func())
+        self.display(session.query(self.model).all())
 
         table_layout.addWidget(self.table)
         root_layout.addLayout(panel_layout)
