@@ -1,6 +1,7 @@
 from pathlib import Path
+import os, sys
 
-BASE_DIR = Path(__file__).parent.resolve()
+BASE_DIR = Path(os.path.realpath(sys.executable)).parent.resolve()
 
 WINDOW_WIDTH = 1680
 WINDOW_HEIGHT = 1050

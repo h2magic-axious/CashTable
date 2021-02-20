@@ -1,4 +1,5 @@
 import sys
+import os
 
 from gui.main_window import MainWindow
 from gui import QApplication

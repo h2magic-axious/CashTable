@@ -6,7 +6,8 @@ from reference import BASE_DIR, AssetsCategory
 
 _base = declarative_base()
 _database_name = 'test.db'
-_engine = create_engine(f"sqlite:///{BASE_DIR.joinpath(_database_name)}", echo=False)
+DATABASE_PATH = BASE_DIR.joinpath(_database_name)
+_engine = create_engine(f"sqlite:///{DATABASE_PATH}", echo=False)
 
 
 class Assets(_base):
