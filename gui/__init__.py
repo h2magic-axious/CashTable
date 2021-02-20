@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import (
     QGridLayout,
     QLabel,
     QComboBox,
-    QPushButton
+    QPushButton,
+    QAbstractItemView
 )
 
 from PyQt5.QtCore import Qt

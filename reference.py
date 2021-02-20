@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).parent.resolve()
 WINDOW_WIDTH = 1680
 WINDOW_HEIGHT = 1050
 
-ROW_SET = 30
+ROW_SET = 50
 FONT_SIZE = 15
 
 

@@ -1,4 +1,4 @@
-from gui import QMainWindow, QHBoxLayout, QTabWidget, Qt, QWidget
+from gui import QMainWindow, QHBoxLayout, QTabWidget, Qt, QVBoxLayout, QPushButton
 from reference import WINDOW_WIDTH, WINDOW_HEIGHT
 
 from gui.tabs import *
