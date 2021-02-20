@@ -1,17 +1,16 @@
-from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit
-from gui.functions import new_table, new_item
-from models import session, func, distinct  # , sum_debt, Debt
+from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
+from gui.functions import new_table, new_item, get_item_content
+from models import session, func, distinct
 from reference import ROW_SET
 
 
 class TabBase(QWidget):
-    def __init__(self, model, sum_func):
+    def __init__(self, model):
         super(TabBase, self).__init__()
 
         self.model = model
-        self.sum_func = sum_func
 
-        n_row = session.query(func.count(distinct(self.model.id))).scalar() // ROW_SET + 1
+        n_row = session.query(func.count(distinct(model.id))).scalar() // ROW_SET + 1
 
         self.headers = ['ID', '项目', '金额']
         self.table = new_table(n_row * ROW_SET, 3, self, self.headers)
@@ -21,24 +20,24 @@ class TabBase(QWidget):
         panel_layout = QHBoxLayout()
 
         button_update_commit = QPushButton('提交', self)
-        # button_update_commit.clicked.connect(self.button_update_commit_clicked)
+        button_update_commit.clicked.connect(self.button_update_commit_clicked)
 
-        button_cancel = QPushButton('撤销', self)
-        # button_cancel.clicked.connect(self.button_cancel_clicked)
+        button_cancel = QPushButton('刷新', self)
+        button_cancel.clicked.connect(self.update_display)
 
         button_delete_by_id = QPushButton('删除', self)
         self.line_id_edit = QLineEdit(self)
         self.line_id_edit.setStyleSheet("background-color:#00CED1")
         self.line_id_edit.setPlaceholderText('输入要删除的记录的ID')
-        # button_delete_by_id.clicked.connect(self.button_delete_clicked)
+        button_delete_by_id.clicked.connect(self.button_delete_clicked)
 
         panel_layout.addWidget(button_update_commit)
         panel_layout.addWidget(button_cancel)
         panel_layout.addWidget(button_delete_by_id)
         panel_layout.addWidget(self.line_id_edit)
 
-        self.init_table(self.sum_func())
-        self.display(session.query(self.model).all())
+        self.init_table(session.query(func.sum(model.balance)).scalar())
+        self.display(session.query(model).all())
 
         table_layout.addWidget(self.table)
         root_layout.addLayout(panel_layout)
@@ -59,3 +58,48 @@ class TabBase(QWidget):
             self.table.setItem(row, 2, new_item(str(i.balance)))
 
             row += 1
+
+    def update_display(self):
+        self.table.clear()
+        self.table.setHorizontalHeaderLabels(self.headers)
+
+        self.init_table(session.query(func.sum(self.model.balance)).scalar())
+        self.display(session.query(self.model).all())
+
+    def button_update_commit_clicked(self):
+        for row in range(1, self.table.rowCount()):
+            ident = get_item_content(self.table, row, 0)
+            balance = get_item_content(self.table, row, 2)
+
+            if not ident and not balance:
+                continue
+
+            record = session.query(self.model).get(ident) if ident else self.model()
+            print(record)
+
+            record.project = get_item_content(self.table, row, 1)
+            try:
+                record.balance = float(balance)
+            except:
+                message = f"不规范的数值\n{balance}"
+                QMessageBox.warning(self, '错误输入', message, QMessageBox.Ok)
+
+                session.commit()
+                self.update_display()
+                return
+
+            session.add(record)
+
+        session.commit()
+        self.update_display()
+
+    def button_delete_clicked(self):
+        ident = self.line_id_edit.text()
+        self.line_id_edit.clear()
+
+        if ident:
+            record = session.query(self.model).get(ident)
+            session.delete(record)
+
+        session.commit()
+        self.update_display()

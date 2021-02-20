@@ -2,9 +2,8 @@ from gui import QMainWindow, QHBoxLayout, QTabWidget, Qt
 from reference import WINDOW_WIDTH, WINDOW_HEIGHT
 
 from gui.tabs import *
-from gui.tabs import TabBase
 
-from models import sum_income, sum_debt, sum_expenses, Debt, Expenses, Income
+from models import Debt, Expenses, Income
 
 
 class MainWindow(QMainWindow):
@@ -42,9 +41,9 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(TabDashboard(), 'Dashboard')
         self.tab_widget.addTab(TabAssets(), 'Assets')
 
-        self.tab_widget.addTab(TabBase(Debt, sum_debt), 'Debt')
-        self.tab_widget.addTab(TabBase(Income, sum_income), 'Income')
-        self.tab_widget.addTab(TabBase(Expenses, sum_expenses), 'Expenses')
+        self.tab_widget.addTab(TabBase(Debt), 'Debt')
+        self.tab_widget.addTab(TabBase(Income), 'Income')
+        self.tab_widget.addTab(TabBase(Expenses), 'Expenses')
 
         # self.tab_widget.addTab(TabDebt(), 'Debt')
         # self.tab_widget.addTab(TabIncome(), 'Income')

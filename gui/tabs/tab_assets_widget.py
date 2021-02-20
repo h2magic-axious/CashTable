@@ -1,4 +1,4 @@
-from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit
+from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
 from gui.functions import new_table, new_item, new_combo_box, get_combo_content, get_item_content
 from models import session, Assets, sum_assets, func, distinct
 from reference import ROW_SET, AssetsCategory
@@ -19,7 +19,7 @@ class TabAssets(QWidget):
         button_update_commit = QPushButton('提交', self)
         button_update_commit.clicked.connect(self.button_update_commit_clicked)
 
-        button_cancel = QPushButton('撤销', self)
+        button_cancel = QPushButton('刷新', self)
         button_cancel.clicked.connect(self.button_cancel_clicked)
 
         button_delete_by_id = QPushButton('删除', self)
@@ -99,8 +99,17 @@ class TabAssets(QWidget):
             record = session.query(Assets).get(ident) if ident else Assets()
 
             record.project = get_item_content(self.table, row, 1)
-            record.balance = float(balance)
             record.category = int(get_combo_content(self.table, row, 3))
+
+            try:
+                record.balance = float(balance)
+            except:
+                message = f"不规范的数值\n{balance}"
+                QMessageBox.warning(self, '错误输入', message, QMessageBox.Ok)
+
+                session.commit()
+                self.update_assets_category(0)
+                return
 
             session.add(record)
 
