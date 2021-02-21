@@ -49,4 +49,4 @@ def sum_models(model):
     result = session.query(func.sum(model.balance)).scalar()
     if not result:
         return 0
-    return result
+    return round(result, 2)

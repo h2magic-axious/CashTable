@@ -1,7 +1,7 @@
 from pathlib import Path
 import os, sys
 
-DEBUT = True
+DEBUT = False
 if DEBUT:
     BASE_DIR = Path(__file__).parent.resolve()
 else:
