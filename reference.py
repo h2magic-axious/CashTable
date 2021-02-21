@@ -27,3 +27,9 @@ AssetsMap = {
     AssetsCategory.CURRENCY: '纸资产',
     AssetsCategory.BANK: '存款'
 }
+
+MESSAGE_BOARD_TEMPLATE = """
+软件介绍：
+    Assets 和 Debt 中的金额记录的是当前已有的数值
+    Income 和 Expenses 中的金额记录的是月度收入/月度支出
+"""

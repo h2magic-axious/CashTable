@@ -1,6 +1,6 @@
-from gui import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QLabel, Qt, QFont, QGridLayout, QPushButton
-from reference import FONT_SIZE
-from models import DATABASE_PATH, BASE_DIR, Assets, Debt, Income, Expenses, func, session, sum_models
+from gui import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QLabel, Qt, QFont, QGridLayout, QPushButton, QTextBrowser
+from reference import FONT_SIZE, MESSAGE_BOARD_TEMPLATE
+from models import DATABASE_PATH, Assets, Debt, Income, Expenses, sum_models
 
 DEFAULT_FONT = QFont('宋体', FONT_SIZE)
 
@@ -49,7 +49,7 @@ class TabDashboard(QWidget):
         self.line_sie = new_line_edit(self, str(s_i_e), Qt.AlignRight, color='green' if s_i_e >= 0 else 'red')
 
         root_layout.addLayout(self.init_asset_layout())
-        root_layout.addLayout(QHBoxLayout())
+        root_layout.addLayout(self.init_message_board())
 
         self.setLayout(root_layout)
 
@@ -58,6 +58,16 @@ class TabDashboard(QWidget):
 
         temp.addWidget(new_label(self, '数据库路径：', Qt.AlignRight))
         temp.addWidget(new_line_edit(self, str(DATABASE_PATH), Qt.AlignLeft))
+
+        return temp
+
+    def init_message_board(self):
+        temp = QHBoxLayout()
+
+        temp_text_browser = QTextBrowser(self)
+        temp_text_browser.setText(MESSAGE_BOARD_TEMPLATE)
+
+        temp.addWidget(temp_text_browser)
 
         return temp
 
@@ -70,24 +80,28 @@ class TabDashboard(QWidget):
         label_debt = new_line_edit(self, '负债', Qt.AlignCenter)
         label_debt.setStyleSheet("background:transparent;border-width:0;border-style:outset")
         temp.addWidget(label_debt, 0, 2)
-        label_value = new_line_edit(self, '净值', Qt.AlignCenter)
-        label_value.setStyleSheet("background:transparent;border-width:0;border-style:outset")
-        temp.addWidget(label_value, 0, 3)
 
         temp.addWidget(new_label(self, '本金', Qt.AlignRight), 1, 0)
         temp.addWidget(self.line_assets, 1, 1)
         temp.addWidget(self.line_debt, 1, 2)
         temp.addWidget(self.line_sad, 1, 3)
 
-        temp.addWidget(new_label(self, '现金流', Qt.AlignRight), 2, 0)
-        temp.addWidget(self.line_income, 2, 1)
-        temp.addWidget(self.line_expenses, 2, 2)
-        temp.addWidget(self.line_sie, 2, 3)
+        label_income = new_line_edit(self, '收入', Qt.AlignCenter)
+        label_income.setStyleSheet("background:transparent;border-width:0;border-style:outset")
+        temp.addWidget(label_income, 2, 1)
+        label_expenses = new_line_edit(self, '支出', Qt.AlignCenter)
+        label_expenses.setStyleSheet("background:transparent;border-width:0;border-style:outset")
+        temp.addWidget(label_expenses, 2, 2)
+
+        temp.addWidget(new_label(self, '现金流', Qt.AlignRight), 3, 0)
+        temp.addWidget(self.line_income, 3, 1)
+        temp.addWidget(self.line_expenses, 3, 2)
+        temp.addWidget(self.line_sie, 3, 3)
 
         button_flush = QPushButton('刷新', self)
         button_flush.clicked.connect(self.update_balance)
 
-        temp.addWidget(button_flush, 3, 0)
+        temp.addWidget(button_flush, 4, 0)
 
         return temp
 

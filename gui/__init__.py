@@ -14,7 +14,8 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QAbstractItemView,
     QLineEdit,
-    QMessageBox
+    QMessageBox,
+    QTextBrowser
 )
 
 from PyQt5.QtCore import Qt

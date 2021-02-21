@@ -45,3 +45,7 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(TabBase(Debt, self.sess), 'Debt')
         self.tab_widget.addTab(TabBase(Income, self.sess), 'Income')
         self.tab_widget.addTab(TabBase(Expenses, self.sess), 'Expenses')
+
+    def closeEvent(self, event) -> None:
+        self.sess.commit()
+        self.sess.close()
