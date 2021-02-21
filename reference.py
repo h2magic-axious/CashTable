@@ -7,8 +7,8 @@ if DEBUT:
 else:
     BASE_DIR = Path(os.path.realpath(sys.executable)).parent.resolve()
 
-WINDOW_WIDTH = 1680
-WINDOW_HEIGHT = 1050
+WINDOW_WIDTH = 1280
+WINDOW_HEIGHT = 768
 
 ROW_SET = 50
 FONT_SIZE = 15

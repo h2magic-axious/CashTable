@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
         self.tab_widget.setStyleSheet(style.replace('$1', str(width / 5)))
 
     def init_ui(self):
-        self.setGeometry(300, 300, WINDOW_WIDTH, WINDOW_HEIGHT)
+        self.setGeometry(100, 100, WINDOW_WIDTH, WINDOW_HEIGHT)
         self.setWindowTitle('资产负债表')
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)

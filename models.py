@@ -45,5 +45,8 @@ _session = sessionmaker(bind=_engine)
 session = _session()
 
 
-def sum_assets():
-    return session.query(func.sum(Assets.balance)).scalar()
+def sum_models(model):
+    result = session.query(func.sum(model.balance)).scalar()
+    if not result:
+        return 0
+    return result

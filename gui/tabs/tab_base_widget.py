@@ -1,6 +1,6 @@
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
 from gui.functions import new_table, new_item, get_item_content
-from models import func, distinct
+from models import func, distinct, sum_models
 from reference import ROW_SET
 
 
@@ -37,7 +37,7 @@ class TabBase(QWidget):
         panel_layout.addWidget(button_delete_by_id)
         panel_layout.addWidget(self.line_id_edit)
 
-        self.init_table(self.sess.query(func.sum(model.balance)).scalar())
+        self.init_table(sum_models(self.model))
         self.display(self.sess.query(model).all())
 
         table_layout.addWidget(self.table)
@@ -64,7 +64,7 @@ class TabBase(QWidget):
         self.table.clear()
         self.table.setHorizontalHeaderLabels(self.headers)
 
-        self.init_table(self.sess.query(func.sum(self.model.balance)).scalar())
+        self.init_table(sum_models(self.model))
         self.display(self.sess.query(self.model).all())
 
     def button_update_commit_clicked(self):

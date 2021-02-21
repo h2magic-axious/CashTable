@@ -1,6 +1,6 @@
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QMessageBox
 from gui.functions import new_table, new_item, new_combo_box, get_combo_content, get_item_content
-from models import Assets, sum_assets, func, distinct
+from models import Assets, sum_models, func, distinct
 from reference import ROW_SET, AssetsCategory
 
 
@@ -34,7 +34,7 @@ class TabAssets(QWidget):
         panel_layout.addWidget(button_delete_by_id)
         panel_layout.addWidget(self.line_id_edit)
 
-        self.init_table(sum_assets())
+        self.init_table(sum_models(Assets))
         self.display(self.sess.query(Assets).all())
 
         table_layout.addWidget(self.table)
@@ -74,7 +74,7 @@ class TabAssets(QWidget):
         self.table.setHorizontalHeaderLabels(self.headers)
 
         if key == AssetsCategory.ALL:
-            s = sum_assets()
+            s = sum_models(Assets)
             query_set = self.sess.query(Assets).all()
         else:
             s = self.sess.query(func.sum(Assets.balance).filter(Assets.category == key)).scalar()
