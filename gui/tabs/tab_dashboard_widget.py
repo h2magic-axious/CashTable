@@ -1,6 +1,6 @@
 from gui import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QLabel, Qt, QFont, QGridLayout, QPushButton, QTextBrowser
 from reference import FONT_SIZE, MESSAGE_BOARD_TEMPLATE
-from models import DATABASE_PATH, Assets, Debt, Income, Expenses, sum_models
+from models import Assets, Debt, Income, Expenses, sum_models
 
 DEFAULT_FONT = QFont('宋体', FONT_SIZE)
 
@@ -32,8 +32,6 @@ class TabDashboard(QWidget):
 
         root_layout = QVBoxLayout()
 
-        root_layout.addLayout(self.init_database_label_layout())
-
         s_assets = sum_models(Assets)
         self.line_assets = new_line_edit(self, str(s_assets), Qt.AlignRight, color='green')
         s_debt = sum_models(Debt)
@@ -52,14 +50,6 @@ class TabDashboard(QWidget):
         root_layout.addLayout(self.init_message_board())
 
         self.setLayout(root_layout)
-
-    def init_database_label_layout(self):
-        temp = QHBoxLayout()
-
-        temp.addWidget(new_label(self, '数据库路径：', Qt.AlignRight))
-        temp.addWidget(new_line_edit(self, str(DATABASE_PATH), Qt.AlignLeft))
-
-        return temp
 
     def init_message_board(self):
         temp = QHBoxLayout()

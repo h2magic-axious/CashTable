@@ -2,12 +2,15 @@ from sqlalchemy import Column, String, create_engine, Integer, Float, func, dist
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from reference import BASE_DIR, AssetsCategory
+from reference import  AssetsCategory
 
 _base = declarative_base()
-DATABASE_PATH = BASE_DIR.joinpath('CashTable.sqlite3')
-_engine = create_engine(f"sqlite:///{DATABASE_PATH}", echo=False)
-
+DATABASE_NAME = 'cash_table'
+HOST = 'localhost'
+USERNAME = 'root'
+PASSWORD = '123456789...'
+PORT = 3306
+_engine = create_engine(f"mysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE_NAME}")
 
 class Assets(_base):
     __tablename__ = 'assets'
